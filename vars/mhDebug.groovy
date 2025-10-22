@@ -11,7 +11,7 @@ def printEnvVars() {
   if( env.DEBUG ) {
     String text = "Variables de entorno:\n"
     env.getEnvironment().each { name, value -> text = text + "${name} = ${value}\n" }
-    yoiUtilidades.Messages(text, "debug")
+    mhUtilidades.Messages(text, "debug")
   }
 }
 
@@ -29,6 +29,6 @@ def printEnvVars() {
 def printJSON(String text, def obj) {
   if( env.DEBUG ) {
     String textObj = yoiUtilidades.jsonStr(obj, true)
-    yoiUtilidades.Messages(text, "debug", textObj)
+    mhUtilidades.Messages(text, "debug", textObj)
   }
 }
