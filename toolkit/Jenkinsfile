@@ -14,7 +14,7 @@ library(
     retriever: modernSCM(
         [
             $class: 'GitSCMSource',
-            credencialId: 'GitHubPusher',
+            credencialId: "${env.GIT_CRED}",
             remote: "${env.GIT_BASE_URL}/mkpof/toolkit_v1}",
             traits: [
                 [ $class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait' ],
