@@ -23,7 +23,7 @@ library(
         ])
 )
 
-node ("all") {
+node () {
     stage("Carga 🕛") {
         // Detecto si se esta ejecutando un "Replay"
         currentBuild.getBuildCauses().each { cause ->
