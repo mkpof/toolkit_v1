@@ -17,7 +17,7 @@ library(
             credencialId: 'GitHubPusher',
             remote: "${env.GIT_BASE_URL}/mkpof/toolkit_v1}",
             traits: [
-                [ $class: 'jenkins.plugin.git.traits.BranchDiscoveryTrait' ],
+                [ $class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait' ],
                 [ $class: 'CleanAfterCheckoutTrait' ]
             ]
         ]
