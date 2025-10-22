@@ -1,0 +1,29 @@
+#!groovy
+env.TOOLKIT_VER = "1.0-ks8"
+//********* deplacara variables*************//
+env.ORGA = "mkpof"
+env.GIT_CRED = "GitHubPusher"
+env.GIT_BASE_URL = "https://github.com"
+env.GIT_DEVOPS_URL = "${env.GIT_BASE_URL}/${env.ORGA}/devops.git"
+//******* Fin Declaracion Variable *****//
+//
+//****** Carga SharedLibs ******//
+library(
+    chagelog: false,
+    identifier: 'mkpof@master',
+    retriever: modernSCM(
+        [
+            $class: 'GitSCMSource',
+            credencialId: "${env.GIT_CRED}",
+            remote: "${env.GIT_BASE_URL}/mkpof/toolkit_v1}",
+            traits: [
+                [ $class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait' ],
+                [ $class: 'CleanAfterCheckoutTrait' ]
+            ]
+        ]
+    )
+)
+
+node ("all"){
+    
+}
