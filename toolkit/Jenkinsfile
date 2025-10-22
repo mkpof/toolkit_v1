@@ -23,15 +23,35 @@ library(
         ])
 )
 
-node ("all"){
-    stages {
-        stage('Hola') {
-            steps {
-                echo 'HOla Goldney'
+node ("all") {
+    stage("Carga 🕛") {
+        // Detecto si se esta ejecutando un "Replay"
+        currentBuild.getBuildCauses().each { cause ->
+            if( cause._class == 'org.jenkinsci.plugins.workflow.cps.replay.ReplayCause') {
+                yoiUtilidades.Messages('"Replay" deshabilitado, por favor vuelva a iniciar el pipeline con el botón ▶️ RUN.', 'error')
+                currentBuild.displayName = "⛔"
+                currentBuild.description = '"Replay" deshabilitado, por favor vuelva a iniciar el pipeline con el botón ▶️ RUN.'
+                sh "exit 1"
+            }
+            if( cause._class == 'org.jenkinsci.plugins.pipeline.modeldefinition.causes.RestartDeclarativePipelineCause') {
+                yoiUtilidades.Messages('"Restart" deshabilitado, por favor vuelva a iniciar el pipeline con el botón ▶️ RUN.', 'error')
+                currentBuild.displayName = "⛔"
+                currentBuild.description = '"Restart" deshabilitado, por favor vuelva a iniciar el pipeline con el botón ▶️ RUN.'
+                sh "exit 1"
             }
         }
+
+        mhUtilidades.CurrentDate()
+        timeout(time: 3, unit: 'MINUTES') {
+        mhUserInputs.inputAppName()
+        mhUserInputs.inputBranch()
+        mhUserInputs.inputTag()
+        }
+
+        mhUtilidades.Messages("Mensaje en el stage de carga", 'success')
+        mhDebug.printEnvVars()
     }
+
 }
 
-
-
+println("Pasamos el primer STAGE")
