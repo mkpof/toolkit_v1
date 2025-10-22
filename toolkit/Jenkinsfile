@@ -1,13 +1,11 @@
 #!groovy
-//********************** Declaración Variables **********************//
-// env.ORGA = env.JOB_NAME.split('/')[1].split('/')[0]
+//env.TOOLKIT_VER = "1.0-ks8"
+//********* deplacara variables*************//
 env.ORGA = "mkpof"
 env.GIT_CRED = "GitHubPusher"
-//env.GIT_API_BASE = "https://api.github.com"
 env.GIT_BASE_URL = "https://github.com"
-
-env.DEBUG = "true"
-//********************* Fin Declaración Variables *******************//
+env.GIT_DEVOPS_URL = "${env.GIT_BASE_URL}/${env.ORGA}/devops.git"
+//******* Fin Declaracion Variable *****//
 //
 //***** Carga SharedLibs *****//
 library(
@@ -24,4 +22,16 @@ library(
             ]
         ])
 )
-println("HOLAAAAAAA")
+
+node ("all"){
+    stages {
+        stage('Hola') {
+            steps {
+                echo 'HOla Goldney'
+            }
+        }
+    }
+}
+
+
+
