@@ -3,7 +3,9 @@
 // env.ORGA = env.JOB_NAME.split('/')[1].split('/')[0]
 env.ORGA = "mkpof"
 env.GIT_CRED = "GitHubPusher"
-env.GIT_API_BASE = "https://api.github.com"
+//env.GIT_API_BASE = "https://api.github.com"
+env.GIT_BASE_URL = "https://github.com"
+
 env.DEBUG = "true"
 //********************* Fin Declaración Variables *******************//
 //
@@ -15,11 +17,10 @@ library(
         [
             $class: 'GitSCMSource',
             credentialsId: 'GitHubPusher',
-            remote: "${env.GIT_BASE_URL}/mkpof/toolkit_v1}",
+            remote: "${env.GIT_BASE_URL}/mkpof/toolkit_v1",
             traits: [
                 [ $class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait' ],
-                [ $class: 'CleanAfterCheckoutTrait']
-
+                [ $class: 'CleanAfterCheckoutTrait' ]
             ]
         ])
 )

@@ -15,7 +15,7 @@ library(
         [
             $class: 'GitSCMSource',
             credencialId: "${env.GIT_CRED}",
-            remote: "${env.GIT_BASE_URL}/mkpof/toolkit_v1}",
+            remote: "${env.GIT_BASE_URL}/mkpof/toolkit_v1",
             traits: [
                 [ $class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait' ],
                 [ $class: 'CleanAfterCheckoutTrait' ]
