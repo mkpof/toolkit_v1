@@ -41,10 +41,10 @@ node () {
             }
         }
 
-        mhUtilidades.CleanWorkspace()
+        //mhUtilidades.CleanWorkspace()
 
         mhUtilidades.CurrentDate() {
-        //env.STARTDATE = env.tdatealm
+        env.STARTDATE = env.tdatealm
         //mhUtilidades.CurrentDate()
         timeout(time: 3, unit: 'MINUTES') 
             mhUserInputs(time: 4)
