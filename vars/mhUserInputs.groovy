@@ -10,7 +10,7 @@
 */
 def inputAppName() {
     // Listo los repos de gitHub y quito repos que deben ignorarse de la lista
-    def listaRepos = yoiGitHub.getRepos()
+    def listaRepos = mhGitHub.getRepos()
     //println("ENTREEEEEEEEE")
     // listaRepos.removeAll([ 'devops', 'jmeter-reports', 'hello-world-java' ])
 
@@ -33,7 +33,7 @@ def inputAppName() {
 /*
   Descripcion: Funcion que encapsula el menu de Tags.
   Autor: 
-  yoiUserInputs.inputTag()
+  mhUserInputs.inputTag()
   inputs:
     -> env.APP_NAME
     -> env.GIT_APP_URL
@@ -43,13 +43,13 @@ def inputAppName() {
     <- env.COMMIT_TAG_APP
 */
 def inputTag() {
-  yoiUtilidades.Messages("Input Tags","title")
+  mhUtilidades.Messages("Input Tags","title")
 
     // Lista Tags de GitHub
-    def appTagsList = yoiGitHub.getTags( env.APP_NAME )
+    def appTagsList = mhGitHub.getTags( env.APP_NAME )
 
     if( appTagsList.size() > 0 ) {
-      yoiUtilidades.Messages("Input Tags","title")
+      mhUtilidades.Messages("Input Tags","title")
 
       def userInput = input(
         id: 'TAGS',
@@ -68,10 +68,10 @@ def inputTag() {
     env.APP_TAG = userInput['Application Tag:'] //env.VERSION
 
     // Vars to ALM
-    env.COMMIT_TAG_APP = yoiGitHub.existTag( env.APP_NAME, env.APP_TAG).commit
+    env.COMMIT_TAG_APP = mhGitHub.existTag( env.APP_NAME, env.APP_TAG).commit
     }
   else {
-    yoiUtilidades.Messages("No Existen Tags de version en el repositorio: ${env.GIT_APP_URL}", "error")
+    mhUtilidades.Messages("No Existen Tags de version en el repositorio: ${env.GIT_APP_URL}", "error")
     sh "exit 1"
   }
 }
@@ -79,7 +79,7 @@ def inputTag() {
 /*
   Descripcion: Funcion que encapsula el menu de Branches.
   Autor: 
-  yoiUserInputs.inputBranch()
+  mhUserInputs.inputBranch()
   inputs:
     -> env.DEPLOY_ENV
   outputs:
@@ -92,7 +92,7 @@ def inputBranch() {
     commit: ""
   ]
 
-  def listaBranches = yoiGitHub.getBranches()
+  def listaBranches = mhGitHub.getBranches()
 
   if( listaBranches.name.size() == 1 ) {
     data.branch = listaBranches.name[0]
@@ -115,7 +115,7 @@ def inputBranch() {
   data.branch = userInput
     data.commit = listaBranches.commit[listaBranches.name.indexOf(data.branch)]
   }
-  yoiUtilidades.Messages("Rama seleccionada: ${data.branch}\nCommit: ${data.commit}", "info")
+  mhUtilidades.Messages("Rama seleccionada: ${data.branch}\nCommit: ${data.commit}", "info")
 
   env.BRANCH = data.branch
   env.COMMIT_TAG_APP = data.commit
@@ -126,7 +126,7 @@ def inputBranch() {
 /*
   Descripcion: Funcion que encapsula el menu de rol.
   Autor: 
-  yoiUserInputs.inputRole()
+  mhUserInputs.inputRole()
   inputs:
     ->
   outputs:
@@ -134,7 +134,7 @@ def inputBranch() {
 */
 /*
   def inputRole() {
-  yoiUtilidades.Messages("Input Role","title")
+  mhUtilidades.Messages("Input Role","title")
 
   def roleOptions = [ "cliente", "supervisor"]
 

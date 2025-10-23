@@ -2,7 +2,7 @@
 /*
   Descripcion: Obtengo la lista de branch del app repo, con sus commit sha.
   Autor:
-  yoiGitHub.getBranches()
+  mhGitHub.getBranches()
   inputs:
     -> env.ORGA
     -> env.APP_NAME
@@ -31,7 +31,7 @@ def getBranches() {
           //url:"${env.GIT_API_BASE}/users/${env.ORGA}/repos?per_page=10&sort=pushed")
         // println("Content: "+response.content)
 
-        def responseJson = yoiUtilidades.jsonParse(response.content)
+        def responseJson = mhUtilidades.jsonParse(response.content)
 
         if( responseJson.size() < pageSize ) {
           next = true
@@ -41,7 +41,7 @@ def getBranches() {
         listaBranches.commit += responseJson*.commit.sha
       }
 
-      yoiDebug.printJSON( "Return yoiGitHub.getBranches()" , listaBranches )
+      mhDebug.printJSON( "Return mhGitHub.getBranches()" , listaBranches )
       return listaBranches
     }
 }
@@ -49,7 +49,7 @@ def getBranches() {
 /*
   Descripcion: Obtiene la lista de repos de la Organizacion.
   Autor: 
-  yoiGitHub.getRepos()
+  mhGitHub.getRepos()
   inputs:
     -> env.ORGA
     -> env.GIT_API_BASE
@@ -72,18 +72,18 @@ def getRepos(){
 
      println("Content: "+response.content)
 
-    def responseJson = yoiUtilidades.jsonParse(response.content)
+    def responseJson = mhUtilidades.jsonParse(response.content)
 
     def listaRepos = responseJson*.name
 
-    yoiDebug.printJSON( "Return yoiGitHub.getRepos()" , listaRepos )
+    mhDebug.printJSON( "Return mhGitHub.getRepos()" , listaRepos )
     return listaRepos
   }
 }
 /*
   Descripcion: Clona el repo de la Aplicacion.
   Autor: 
-  yoiGitHub.cloneAppRepo()
+  mhGitHub.cloneAppRepo()
   inputs:
     -> env.BRANCH
     -> env.APP_TAG
@@ -95,9 +95,9 @@ def getRepos(){
 def cloneAppRepo() {
   String branchOrTag = env.BRANCH ? env.BRANCH : "refs/tags/${env.APP_TAG ? env.APP_TAG : env.SEM_VERSION}"
 
-  yoiUtilidades.Messages("Descargando archivos de la Aplicacion","title")
-  yoiUtilidades.Messages("📦 Repositorio: ${env.GIT_APP_URL}", "info")
-  yoiUtilidades.Messages("🏷️ Branch o Tag: ${branchOrTag}", "info")
+  mhUtilidades.Messages("Descargando archivos de la Aplicacion","title")
+  mhUtilidades.Messages("📦 Repositorio: ${env.GIT_APP_URL}", "info")
+  mhUtilidades.Messages("🏷️ Branch o Tag: ${branchOrTag}", "info")
 
   checkout([
     $class: 'GitSCM',
@@ -132,7 +132,7 @@ def cloneAppRepo() {
 /*
   Descripcion: Clona el repo "devops" de la Organizacion.
   Autor: 
-  yoiGitHub.cloneDevopsRepo()
+  mhGitHub.cloneDevopsRepo()
   inputs:
     -> env.DEVOPS_TAG
     -> env.GIT_CRED
@@ -143,9 +143,9 @@ def cloneAppRepo() {
 def cloneDevopsRepo() {
   String branchOrTag = ( env.DEVOPS_TAG == "master" ) ? "master" : "refs/tags/${env.DEVOPS_TAG}"
 
-    yoiUtilidades.Messages("Descargando archivos de repositorio devops","title")
-    yoiUtilidades.Messages("📦 Repositorio: ${env.GIT_DEVOPS_URL}", "info")
-    yoiUtilidades.Messages("🏷️ Branch o Tag: ${branchOrTag}", "info")
+    mhUtilidades.Messages("Descargando archivos de repositorio devops","title")
+    mhUtilidades.Messages("📦 Repositorio: ${env.GIT_DEVOPS_URL}", "info")
+    mhUtilidades.Messages("🏷️ Branch o Tag: ${branchOrTag}", "info")
 
     dir("${pwd()}/devops"){
       checkout([
@@ -176,14 +176,14 @@ def cloneDevopsRepo() {
     }
     if( fileExists("./devops/${env.APP_NAME}/${env.DEPLOY_ENV}") ) {
     env.PATH_DEVOPS_CONFIG = "./devops/${env.APP_NAME}/${env.DEPLOY_ENV}"
-    yoiUtilidades.Messages("Directorio devops: ${env.PATH_DEVOPS_CONFIG}","success")
+    mhUtilidades.Messages("Directorio devops: ${env.PATH_DEVOPS_CONFIG}","success")
     }
 }
 
 /*
   Descripcion: Obtiene la lista de los ultimos 100 tags del repo.
   Autor: 
-  yoiGitHub.getTags(String repo)
+  mhGitHub.getTags(String repo)
   inputs:
     -> repo
     -> env.ORGA
@@ -212,7 +212,7 @@ def getTags(String repo) {
         url:"${env.GIT_API_BASE}/repos/${env.ORGA}/${repo}/tags?per_page=${pageSize}&page=${pageNumber}")
       // println("Content: "+response.content)
 
-      def responseJson = yoiUtilidades.jsonParse(response.content)
+      def responseJson = mhUtilidades.jsonParse(response.content)
 
       if( responseJson.size() < pageSize ) {
         next = true
@@ -221,7 +221,7 @@ def getTags(String repo) {
       listaTags += responseJson*.name
     }
 
-    yoiDebug.printJSON( "Return yoiGitHub.getTags(${repo})" , listaTags )
+    mhDebug.printJSON( "Return mhGitHub.getTags(${repo})" , listaTags )
     return listaTags
   }
 }
@@ -229,7 +229,7 @@ def getTags(String repo) {
 /*
   Descripcion: Comprueba si existe el tag en el repo.
   Autor: 
-  yoiGitHub.existTag(String repo, String tag)
+  mhGitHub.existTag(String repo, String tag)
   inputs:
     -> repo
     -> tag
@@ -251,8 +251,8 @@ def existTag(String repo, String tag) {
       url:"${env.GIT_API_BASE}/repos/${env.ORGA}/${repo}/git/refs/tags/${tag}")
     // println("Content: "+response.content)
 
-    def responseJson = yoiUtilidades.jsonParse(response.content)
-    yoiDebug.printJSON( "raw yoiGitHub.existTag(${repo}, ${tag})" , responseJson )
+    def responseJson = mhUtilidades.jsonParse(response.content)
+    mhDebug.printJSON( "raw mhGitHub.existTag(${repo}, ${tag})" , responseJson )
 
     if( response.status == 200 ) {
       if( responseJson.object.type == "tag" ) {
@@ -266,7 +266,7 @@ def existTag(String repo, String tag) {
           url:"${env.GIT_API_BASE}/repos/${env.ORGA}/${repo}/git/tags/${responseJson.object.sha}")
         // println("Content: "+response.content)
 
-        responseJson = yoiUtilidades.jsonParse(response.content)
+        responseJson = mhUtilidades.jsonParse(response.content)
       }
       data.put("exist", true)
       data.put("commit", responseJson.object.sha.substring(0,8))
@@ -277,14 +277,14 @@ def existTag(String repo, String tag) {
     }
   }
 
-  yoiDebug.printJSON( "Return yoiGitHub.existTag(${repo}, ${tag})" , data )
+  mhDebug.printJSON( "Return mhGitHub.existTag(${repo}, ${tag})" , data )
   return data
 }
 
 /*
   Descripcion: Comprueba si existe el branch en el repo.
   Autor: 
-    yoiGitHub.existBranch(String repo, String branch)
+    mhGitHub.existBranch(String repo, String branch)
   inputs:
     -> repo
     -> branch
@@ -306,7 +306,7 @@ def existBranch(String repo, String branch) {
     url:"${env.GIT_API_BASE}/repos/${env.ORGA}/${repo}/branches/${branch}")
     println("Content: "+response.content)
 
-    def responseJson = yoiUtilidades.jsonParse(response.content)
+    def responseJson = mhUtilidades.jsonParse(response.content)
 
     if( response.status == 200 ) {
       data.put("exist", true)
@@ -318,14 +318,14 @@ def existBranch(String repo, String branch) {
     }
   }
 
-  yoiDebug.printJSON( "Return yoiGitHub.existBranch(${repo}, ${branch})" , data )
+  mhDebug.printJSON( "Return mhGitHub.existBranch(${repo}, ${branch})" , data )
   return data
 }
 
 /*
   Descripcion: Comprueba si existe el branch en el repo.
   Autor: 
-  yoiGitHub.createRelease(String repo, String branch)
+  mhGitHub.createRelease(String repo, String branch)
   inputs:
     -> repo
     -> branch
@@ -352,17 +352,17 @@ def createRelease(String repo, String branch) {
       [ name: 'Accept', value: 'application/vnd.github.mercy-preview+json', maskValue: false ]
     ],
     contentType: 'APPLICATION_JSON',
-    requestBody: yoiUtilidades.jsonStr(data),
+    requestBody: mhUtilidades.jsonStr(data),
     url:"${env.GIT_API_BASE}/repos/${env.ORGA}/${repo}/releases")
     println("Content: "+response.content)
 
-    def responseJson = yoiUtilidades.jsonParse(response.content)
+    def responseJson = mhUtilidades.jsonParse(response.content)
 
     if( response.status == 201 ) {
       println "Release Generada"
     }
     else {
-      yoiDebug.printJSON( "Return yoiGitHub.existBranch(${repo}, ${branch})" , responseJson )
+      mhDebug.printJSON( "Return mhGitHub.existBranch(${repo}, ${branch})" , responseJson )
     }
   }
 }
@@ -370,7 +370,7 @@ def createRelease(String repo, String branch) {
 /*
   Descripcion: Comprueba si existe el tag en el repo.
   Autor: 
-  yoiGitHub.pushTag(String repo, String tag)
+  mhGitHub.pushTag(String repo, String tag)
   inputs:
     -> repo
     -> tag
@@ -381,7 +381,7 @@ def createRelease(String repo, String branch) {
     String TAG,String COMMIT
 */
 def pushTag() {
-  yoiUtilidades.Messages("Pushing git tag :: NodeJS","info")
+  mhUtilidades.Messages("Pushing git tag :: NodeJS","info")
   withCredentials([usernamePassword(credentialsId: 'GitHubPusher', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
     sh "git config remote.origin.url https://${GIT_USERNAME}:${GIT_PASSWORD}@${env.GIT_APP_URL.replace("https://", "")}"
     sh "git commit -am \"v${env.SEM_VERSION} - Auto tagging from jenkins.\""
