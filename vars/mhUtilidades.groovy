@@ -2,8 +2,7 @@
 import groovy.json.JsonSlurperClassic
 import groovy.json.JsonOutput
 import java.security.MessageDigest
-import java.text.SimpleFormat
-
+import java.text.SimpleDateFormat
 /*
   Descripcion: Crea un directorio en Linux
   Autor:
