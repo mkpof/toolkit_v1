@@ -47,7 +47,7 @@ node () {
         //env.STARTDATE = env.tdatealm
         //mhUtilidades.CurrentDate()
         timeout(time: 3, unit: 'MINUTES') 
-           mhUserInputs(time: 4)
+        //   mhUserInputs(time: 4)
         
 
         mhUtilidades.Messages("Mensaje en el stage de carga", 'success')
