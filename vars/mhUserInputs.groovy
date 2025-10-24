@@ -1,28 +1,129 @@
 /*
-  Descripcion: Funcion que encapsula el menu aplicaciones.
-  Autor: 
-  inputAppName()
-  inputs:
-    ->
-  outputs:
-    <- env.APP_NAME
-    <- env.DEPLOY
+  Descripcion : Menú del stage Load. Interfaz de usuario
+  mhUserImputs(time: 3)
 */
+import groovy.time.TimeCategory
+import groovy.time.TimeDuration
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+
+
+def call(def props) {
+    Date horaInicio = new Date()
+
+    boolean migrated = true
+
+    boolean next = false
+    while (!next ) {
+        next = true
+
+        def firstOption = [ "Aplicaciones", "Secrets", "Middleware" ]
+        if( !migrated ) {
+            firstOption.add(0, "____________________\n Migracion OCP 3.11. ---> OCP 4.x \n_____________________")
+        }
+        if ( env.USER_DEVOPS ) firstOption.add("Tools Devops")
+
+        def firstOption = input(
+            id: 'firstInput',
+            mesaje: 'Galicia Toolkit v3.0 - OCP 4.x',
+            ok: 'Continuar',
+            parameters: [
+                [
+                    $class:'ChoiceParameterDefinition',
+                    description: 'Selecciona recurso:',
+                    name: 'type'
+                ]
+            ])
+        mhUtilidades.Messages("Tipo elegido: ${firstInput}", "info")
+        try{
+            switch( firstInput ) {
+                case "Aplicaciones":
+                    inputAppName()
+                    inputOption()
+                    break
+
+                case "Secrets":
+                    inputSecrets()
+                    break
+
+                case "Middleware":
+                    def middInput = inputMiddleware()
+                    env.DEPLOY_ENVS = mhUtilidades.jsonStr(["none"])
+                    inputOption( middInput )
+                    // Excepcones de inputs para suscripcion a la API
+                    if( middInput == "Administrar API" && env.OPTION != "Suscripcion API" ) {
+                        inputAppName()
+                    }
+                    break
+                
+                case "____________________\n Migracion OCP 3.11. ---> OCP 4.x \n_____________________":
+                    def migracionInput = inputMigracion()
+                    env.DEPLOY_ENVS = mhUtilidades.jsonStr(["none"])
+                    inputOption ( migracionInput )
+
+                    switch( migracionInput ) {
+                        case ["Migrar Aplicacion", "MIgrar Tráfico DNS(Friendly URL Fronts)", "Mifrar Tráfico BFF"]:
+                            inputAppName()
+                            break
+                    }
+                    break
+
+                case "Networking":
+                    def netInput = inputNetworking()
+                    inputOption( netInput )
+                    inputAppName()
+                    break
+
+                case "Tools Devops":
+                    env.DEPLOY_ENVS = mhUtilidades.jsonStr(["none"])
+                    env.DEPLOY_ENV = "none"
+                    inputOption( "Tools Devops" )
+                    break
+            }
+            if (firstInput != "Tools Devops") {
+                inputEnv()
+            }
+        }
+        catch(err) {
+            println "[ ${err.getMessage()}, ${err.toString()} ]"
+
+            if( err.toString().contains("workflow.steps.FlowInterruptedException") ) {
+                Date horaFin = new Date()
+                TimeDuration duracion = TimeCategory.minus( horaFin, horaInicio)
+                // Determina si ocurrio el timeout del menú
+                if( duracion.minutes == (props.time -1 ) && duracion.seconds > 55 ) {
+                    errorDevops("001")
+                }
+            }
+
+            if( err.getMessage() ) {
+                // Determina si el error es por sh "exit 1"
+                if( err.getMessage().contains('exit code 1') ) {
+                    errorDevops("002")
+                }
+            }
+            // Vuelvo al menu inicial (inicio del while)
+            next = false
+        }
+    }
+
+}
+
 def inputAppName() {
     // Listo los repos de gitHub y quito repos que deben ignorarse de la lista
     def listaRepos = mhGitHub.getRepos()
-    //println("ENTREEEEEEEEE")
-    // listaRepos.removeAll([ 'devops', 'jmeter-reports', 'hello-world-java' ])
+    listaRepos.removeAll{ item -> [ 'devops', 'jmeter-reports', 'hello-word-java' ].contains( item.name ) }
+    listaRepos.removeAll{ item -> item.topics.contains( "deprecated" )  || item.topics.contains( "repo-ignore" ) }
 
     def inAppName = input(
       id: 'inAppName',
-      message: 'Nombre de Aplicacion',
+      message: 'Aplicacion',
       ok: 'Continuar',
       parameters: [
         [
           $class:'ChoiceParameterDefinition',
           description: 'Seleccione su aplicacion:',
-          choices: listaRepos,
+          choices: listaRepos*.name,
           name: 'appName'
         ]
       ])

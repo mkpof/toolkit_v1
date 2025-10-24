@@ -49,7 +49,8 @@ node () {
         env.STARTDATE = env.tdatealm
         //mhUtilidades.CurrentDate()
         //timeout(time: 4, unit: 'MINUTES') {
-        mhUserInputs.inputAppName()
+        //mhUserInputs.inputAppName()
+        mhUserInputs()
         //}
 
         mhUtilidades.Messages("Mensaje en el stage de carga", 'success')
@@ -61,8 +62,8 @@ println("Pasamos el primer STAGE")
         env.PROYECTO_K8S = "${env.ORGA}-${env.DEPLOY_ENV}"
         env.PROYECTO = env.ORGA
         if ( env.APP_NAME ) {
-            env.GIT_APP_URL = "https://github.com/${env.ORGA}/${env.APP_NAME}.git"
-            
+            env.GIT_APP_URL = "${env.GIT_BASE_URL}/${env.ORGA}/${env.APP_NAME}.git"
+
         }
         mhUtilidades.Messages("Mensaje en el stage de Validaciones", 'success')
     }
