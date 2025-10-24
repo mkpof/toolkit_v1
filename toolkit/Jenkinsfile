@@ -45,8 +45,8 @@ node () {
 
         mhUtilidades.CleanWorkspace()
 
-        //mhUtilidades.CurrentDate()
-        //env.STARTDATE = env.tdatealm
+        mhUtilidades.CurrentDate()
+        env.STARTDATE = env.tdatealm
         //mhUtilidades.CurrentDate()
         //timeout(time: 4, unit: 'MINUTES') {
         //    mhUserInputs()
