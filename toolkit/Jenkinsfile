@@ -45,12 +45,12 @@ node () {
 
         mhUtilidades.CleanWorkspace()
 
-        mhUtilidades.CurrentDate() {
+        mhUtilidades.CurrentDate() 
         env.STARTDATE = env.tdatealm
         //mhUtilidades.CurrentDate()
         //timeout(time: 4, unit: 'MINUTES') {
             //mhUserInputs()
-        }
+        //}
 
         mhUtilidades.Messages("Mensaje en el stage de carga", 'success')
         mhDebug.printEnvVars()
