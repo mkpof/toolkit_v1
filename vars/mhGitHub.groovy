@@ -68,6 +68,7 @@ def getRepos(){
           [ name: 'Accept', value: 'application/vnd.github.mercy-preview+json', maskValue: false ]
         ],
         url:"${env.GIT_API_BASE}/users/${env.ORGA}/repos?per_page=3&sort=pushed")
+        //https://api.github.com/users/mkpof/repos?per_page=10&sort=pushed
         //url:"${env.GIT_API_BASE}/user/repos?per_page=10&sort=pushed")
 
      println("Content: "+response.content)
