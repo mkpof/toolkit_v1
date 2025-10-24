@@ -3,8 +3,8 @@
 //********* deplacara variables*************//
 env.ORGA = "mkpof"
 env.GIT_CRED = "GitHubPusher"
-//env.GIT_BASE_URL = "https://github.com"
-env.GIT_API_BASE = "https://api.github.com"
+env.GIT_BASE_URL = "https://github.com"
+//env.GIT_API_BASE = "https://api.github.com"
 
 env.GIT_DEVOPS_URL = "${env.GIT_BASE_URL}/${env.ORGA}/devops.git"
 //******* Fin Declaracion Variable *****//
