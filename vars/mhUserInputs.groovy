@@ -129,6 +129,38 @@ def inputAppName() {
       ])
     // println inAppName
     env.APP_NAME = inAppName
+
+    mhUtilidades.Mensaje("Aplicacion elegida: ${env.APP_NAME}","info")
+
+    // Determino env.TECH, env.PROJECT_TYPE, env.TOOL, env.LANGUAGE
+    def repoData = listaRepos.find{ repo -> repo.name == env.APP_NAME }
+    env.REPO_CREATED_AT = repoData.created_at
+
+    mhDetecTech( repoData.topics )
+
+    if( !env.PROJECT_TYPE.startsWith("WIN_") && env.PROJECT_TYPE != "NETCORE_NUGET" ) {
+        if( env.APP_NAME.toLwerCase() || env.APP_NAME("_") ){
+            mhUtilidades.Mensaje("El Nombre de la aplicacion \"${env.APP_NAME}\" no es valido.", "warn")
+            errorDevops("005")
+        }
+    }
+    // Si tiene ImageStream default, es porque la aplicacion debe ser creada en OCP.
+    // Entonces busco los entornos desplegados.
+    if( env.IS != "none" ) {
+        // Determino si la app esta "deployed" o "noDeployed"
+        def envs = mhOCPapi.getStatusClusters( env.APP_NAME ).keySet()
+        envs.add("none")
+        env.DEPLOY_ENVS = mhUtilidades.jsonStr(envs)
+
+        if( envs.size() > 1 ) {
+            env.DEPLOY = "deployed"
+        }
+        else {
+            env.DEPLOY = "noDeployed"
+        }
+    }
+    mhDebug.printEnvVars()
+
 }
 
 /*
