@@ -21,7 +21,7 @@ def call(def props) {
         if( !migrated ) {
             firstOption.add(0, "____________________\n Migracion OCP 3.11. ---> OCP 4.x \n_____________________")
         }
-        if ( env.USER_DEVOPS ) firstOption.add("Tools Devops")
+        //if ( env.USER_DEVOPS ) firstOption.add("Tools Devops")
 
         def firstInput = input(
             id: 'firstInput',
