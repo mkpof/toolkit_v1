@@ -23,7 +23,7 @@ def call(def props) {
         }
         if ( env.USER_DEVOPS ) firstOption.add("Tools Devops")
 
-        def firstOption = input(
+        def firstInput = input(
             id: 'firstInput',
             mesaje: 'Galicia Toolkit v3.0 - OCP 4.x',
             ok: 'Continuar',
